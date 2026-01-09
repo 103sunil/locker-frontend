@@ -1,0 +1,32 @@
+import Image from "next/image";
+import Link from "next/link";
+
+export default function Navbar() {
+  return (
+    <div className="w-full flex justify-between items-center py-6 px-10">
+      <Link href="/">
+        {/* <Image
+          className="h-7 w-auto max-[602px]:h-4"
+          src="assets/VOUZ.svg"
+          height={100}
+          width={500}
+          alt="VOUZ"
+        /> */}
+        <h1 className="h-6 w-auto max-[602px]:h-5"
+          
+        
+        >ShareNitt.</h1>
+      </Link>
+
+      <Link href="https://github.com/103sunil" target="_blank">
+        <Image
+          className="h-6 w-auto max-[602px]:h-5"
+          src="assets/github.svg"
+          height={100}
+          width={500}
+          alt="GITHUB"
+        />
+      </Link>
+    </div>
+  );
+}
