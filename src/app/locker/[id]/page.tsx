@@ -6,7 +6,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { encrypt } from "tanmayo7lock";
 
 interface FileData {
   fileName: string;
@@ -111,8 +110,8 @@ export default function Locker(props: { params: Promise<{ id: string }> }) {
     if (e.target.files && e.target.files[0]) {
       formData.append("file", e.target.files[0], e.target.files[0].name);
     }
-    formData.append("name", encrypt(id));
-    formData.append("passkey", encrypt(passkey));
+    formData.append("name", id);
+    formData.append("passkey", passkey);
     setImage(formData);
   };
 
