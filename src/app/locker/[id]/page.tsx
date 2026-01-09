@@ -122,16 +122,18 @@ export default function Locker(props: { params: Promise<{ id: string }> }) {
     if (!file) return;
 
     // 1. Request Presigned URL (Init)
+    // 1. Request Presigned URL (Init)
+    // Hybrid Encryption: Encrypt auth fields, keep metadata plain
+    const encryptedAuth = encryptObjectValues({ name: id, passkey: passkey });
     const payload = {
-      name: id,
-      passkey: passkey,
+      ...encryptedAuth,
       fileName: file.name,
       fileType: file.type,
     };
 
     const initResponse = await api.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/upload`,
-      encryptObjectValues(payload)
+      payload
     );
 
     if (initResponse.success) {
@@ -152,16 +154,16 @@ export default function Locker(props: { params: Promise<{ id: string }> }) {
       xhr.onload = async () => {
         if (xhr.status === 200) {
           // 3. Confirm Upload (Complete)
+          const encryptedAuth = encryptObjectValues({ name: id, passkey: passkey });
           const completePayload = {
-            name: id,
-            passkey: passkey,
+            ...encryptedAuth,
             fileName: file.name,
             s3Key: s3Key,
           };
 
           const completeResponse = await api.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/complete_upload`,
-            encryptObjectValues(completePayload)
+            completePayload
           );
 
           if (completeResponse.success) {
@@ -197,14 +199,14 @@ export default function Locker(props: { params: Promise<{ id: string }> }) {
   };
 
   const deleteFile = async (fileName: string) => {
+    const encryptedAuth = encryptObjectValues({ name: id, passkey: passkey });
     const payload = {
-      name: id,
-      passkey: passkey,
+      ...encryptedAuth,
       fileName: fileName,
     };
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/delete_file`,
-      encryptObjectValues(payload)
+      payload
     );
     if (response.success) {
       if ((response.data as { status: number }).status === 1) {
